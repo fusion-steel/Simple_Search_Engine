@@ -9,4 +9,3 @@ enum class Menu(private val description: String) {
         return "$ordinal. $description"
     }
 }
-
