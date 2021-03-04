@@ -64,7 +64,7 @@ fun runSearchEngine(data: List<String>) {
 
 fun main(args: Array<String>) {
     val data = if (args.isNotEmpty()) {
-        val filename = "src/" + args[1]
+        val filename = args[1]
         File(filename).readLines()
     } else {
         parseData()
