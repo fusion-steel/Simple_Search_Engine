@@ -1,6 +1,7 @@
 package search
 
 import java.util.Scanner
+import java.io.File
 
 val sin = Scanner(System.`in`)
 
@@ -9,14 +10,14 @@ fun parseData(): MutableList<String> {
     val n = sin.nextInt()
     sin.nextLine()
     println("Enter all people:")
-    val people = mutableListOf<String>()
+    val data = mutableListOf<String>()
 
     repeat(n) {
         val toAdd = sin.nextLine()
-        people.add(toAdd)
+        data.add(toAdd)
     }
     println()
-    return people
+    return data
 }
 
 fun printMenu() {
@@ -26,25 +27,24 @@ fun printMenu() {
     println(Menu.EXIT)
 }
 
-fun findPersonsInfo(people: List<String>): List<String> {
+fun findPersonsInfo(data: List<String>): List<String> {
     println("Enter a name or email to search all suitable people.")
     val searchFor = sin.nextLine()
     val found = mutableListOf<String>()
-    for (person in people) {
-        if (person.contains(searchFor, true)) {
-            found.add(person)
+    for (item in data) {
+        if (item.contains(searchFor, true)) {
+            found.add(item)
         }
     }
     return found
 }
 
-fun printAllPeople(people: List<String>) {
+fun printAllData(data: List<String>) {
     println("=== List of people ===")
-    people.forEach { println(it) }
+    data.forEach { println(it) }
 }
 
-fun main() {
-    val people = parseData()
+fun runSearchEngine(data: List<String>) {
     while (true) {
         printMenu()
         val choice = sin.nextInt()
@@ -53,11 +53,21 @@ fun main() {
 
         when (choice) {
             0 -> break
-            1 -> findPersonsInfo(people).forEach { println( it ) }
-            2 -> printAllPeople(people)
+            1 -> findPersonsInfo(data).forEach { println( it ) }
+            2 -> printAllData(data)
             else -> println("Incorrect option! Try again.")
         }
         println()
     }
     println("Bye!")
+}
+
+fun main(args: Array<String>) {
+    val data = if (args.isNotEmpty()) {
+        val filename = "src/" + args[1]
+        File(filename).readLines()
+    } else {
+        parseData()
+    }
+    runSearchEngine(data)
 }
