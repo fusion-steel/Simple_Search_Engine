@@ -27,13 +27,13 @@ fun printMenu() {
     println(Menu.EXIT)
 }
 
-fun findPersonsInfo(data: List<String>, indexMap: Map<String, List<Int>>): List<String> {
+fun findPersonsInfo(data: List<String>, indexMap: Map<String, List<Int>>): Set<String> {
     println("Enter a name or email to search all suitable people.")
     val searchFor = sin.nextLine()
-    val found = mutableListOf<String>()
+    val found = mutableSetOf<String>()
 
     for (key in indexMap.keys) {
-        if (key.contains(searchFor, true)) {
+        if (key.equals(searchFor, true)) {
             for (i in indexMap[key]!!) {
                 found.add(data[i])
             }
