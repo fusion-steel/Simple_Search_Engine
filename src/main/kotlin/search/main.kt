@@ -27,14 +27,22 @@ fun printMenu() {
     println(Menu.EXIT)
 }
 
-fun findPersonsInfo(data: List<String>): List<String> {
+fun findPersonsInfo(data: List<String>, indexMap: Map<String, List<Int>>): List<String> {
     println("Enter a name or email to search all suitable people.")
     val searchFor = sin.nextLine()
     val found = mutableListOf<String>()
-    for (item in data) {
-        if (item.contains(searchFor, true)) {
-            found.add(item)
+
+    for (key in indexMap.keys) {
+        if (key.contains(searchFor, true)) {
+            for (i in indexMap[key]!!) {
+                found.add(data[i])
+            }
         }
+    }
+    if (found.size > 0) {
+        println("${found.size} persons found:")
+    } else {
+        println("No matching people found.")
     }
     return found
 }
@@ -45,21 +53,36 @@ fun printAllData(data: List<String>) {
 }
 
 fun runSearchEngine(data: List<String>) {
+    val indexMap = indexMap(data)
+
     while (true) {
         printMenu()
-        val choice = sin.nextInt()
+        val choice = sin.next().first()
         sin.nextLine()
         println()
 
         when (choice) {
-            0 -> break
-            1 -> findPersonsInfo(data).forEach { println( it ) }
-            2 -> printAllData(data)
+            '0' -> break
+            '1' -> findPersonsInfo(data, indexMap).forEach { println( it ) }
+            '2' -> printAllData(data)
             else -> println("Incorrect option! Try again.")
         }
         println()
     }
     println("Bye!")
+}
+
+fun indexMap(lines: List<String>): Map<String, List<Int>> {
+    val words = lines.map { it.split(' ') }.flatten().toSet()
+    val invIndexMap = words.associateWith { mutableListOf<Int>() }
+    lines.forEachIndexed { index, line ->
+        for (word in words) {
+            if (line.contains(word)) {
+                invIndexMap[word]?.add(index)
+            }
+        }
+    }
+    return invIndexMap
 }
 
 fun main(args: Array<String>) {
