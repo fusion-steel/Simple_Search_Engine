@@ -28,23 +28,34 @@ fun printMenu() {
 }
 
 fun findPersonsInfo(data: List<String>, indexMap: Map<String, List<Int>>): Set<String> {
+    println("Select a matching strategy: ALL, ANY, NONE")
+    val matchingStrategy = sin.next()
+    sin.nextLine()
+
     println("Enter a name or email to search all suitable people.")
-    val searchFor = sin.nextLine()
+    val searchFor = sin.nextLine().split(' ')
     val found = mutableSetOf<String>()
 
     for (key in indexMap.keys) {
-        if (key.equals(searchFor, true)) {
-            for (i in indexMap[key]!!) {
-                found.add(data[i])
-            }
+        when (matchingStrategy.toUpperCase()) {
+            "ALL" -> if (!searchFor.all {
+                    it.equals(key, true) }) { continue }
+            "ANY" -> if (!searchFor.any {
+                    it.equals(key, true) }) { continue }
+            "NONE" -> if (!searchFor.none {
+                    it.equals(key, true) }) { continue }
+        }
+        for (i in indexMap[key]!!) {
+            found.add(data[i])
         }
     }
-    if (found.size > 0) {
-        println("${found.size} persons found:")
-    } else {
-        println("No matching people found.")
-    }
-    return found
+
+        if (found.size > 0) {
+            println("${found.size} persons found:")
+        } else {
+            println("No matching people found.")
+        }
+        return found
 }
 
 fun printAllData(data: List<String>) {
@@ -53,7 +64,7 @@ fun printAllData(data: List<String>) {
 }
 
 fun runSearchEngine(data: List<String>) {
-    val indexMap = indexMap(data)
+    val index = indexMap(data)
 
     while (true) {
         printMenu()
@@ -63,7 +74,7 @@ fun runSearchEngine(data: List<String>) {
 
         when (choice) {
             '0' -> break
-            '1' -> findPersonsInfo(data, indexMap).forEach { println( it ) }
+            '1' -> findPersonsInfo(data, index).forEach { println( it ) }
             '2' -> printAllData(data)
             else -> println("Incorrect option! Try again.")
         }
