@@ -37,16 +37,18 @@ fun findPersonsInfo(data: List<String>, indexMap: Map<String, List<Int>>): Set<S
     val found = mutableSetOf<String>()
 
     for (key in indexMap.keys) {
-        when (matchingStrategy.toUpperCase()) {
-            "ALL" -> if (!searchFor.all {
-                    it.equals(key, true) }) { continue }
-            "ANY" -> if (!searchFor.any {
-                    it.equals(key, true) }) { continue }
-            "NONE" -> if (!searchFor.none {
-                    it.equals(key, true) }) { continue }
-        }
-        for (i in indexMap[key]!!) {
-            found.add(data[i])
+        if (indexMap[key]!!.isNotEmpty()) {
+            for (index in indexMap[key]!!) {
+                when (matchingStrategy.toUpperCase()) {
+                    "ALL" -> if (!searchFor.all {
+                            data[index].contains(it, true) }) { continue }
+                    "ANY" -> if (!searchFor.any {
+                            data[index].contains(it, true) }) { continue }
+                    "NONE" -> if (!searchFor.none {
+                            data[index].contains(it, true) }) { continue }
+                }
+                found.add(data[index])
+            }
         }
     }
 
